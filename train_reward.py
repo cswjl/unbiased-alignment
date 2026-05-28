@@ -16,8 +16,8 @@ import wandb
 
 parser = argparse.ArgumentParser(description='reward model train')
 # model and dataset name
-parser.add_argument('--model', type=str, default="llama3b", help='model name')
-parser.add_argument('--dataset', type=str, default="ufb", help='dataset name, hh, tldr, orca, ufb, shp')
+parser.add_argument('--model', type=str, default="qwen1.7b", help='model name')
+parser.add_argument('--dataset', type=str, default="hh", help='dataset name, hh, tldr, ufb')
 parser.add_argument('--noise_rate', type=float, default=0, help='noise rate')
 # loss setting
 parser.add_argument('--loss', type=str, default='sigmoid', help='sigmoid, unbiased')
@@ -28,7 +28,6 @@ parser.add_argument('--gradient_accumulation_steps', type=int, default=1, help='
 parser.add_argument('--epochs', type=int, default=3, help='epochs')
 parser.add_argument('--lr', type=float, default=1e-5, help='learning rate')
 parser.add_argument('--max_grad_norm', type=float, default=10, help='max grad norm')
-# parser.add_argument('--max_length', type=int, default=512, help='max length')
 parser.add_argument('--seed', type=int, default=123, help='seed')
 parser.add_argument('--lr_scheduler_type', type=str, default='linear', help='lr scheduler type')
 parser.add_argument('--warmup_ratio', type=float, default=0.1, help='warmup ratio')
@@ -121,7 +120,7 @@ elif args.loss == 'unbiased':
     reward_args.unbiased_a = args.para
 elif args.loss == 'normal_unbiased':
     reward_args.unbiased_a = args.para    
-    
+
 reward_trainer = RewardTrainer(
     model=reward_model,
     processing_class=tokenizer,

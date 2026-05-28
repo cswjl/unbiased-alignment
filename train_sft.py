@@ -13,15 +13,13 @@ import sys
 parser = argparse.ArgumentParser(description='sft train')
 # model and dataset name
 parser.add_argument('--model', type=str, default="qwen1.7b", help='model name')
-# parser.add_argument('--tokenizer_name', type=str, default="Qwen/Qwen3-4B", help='name')
-parser.add_argument('--dataset', type=str, default="hh", help='dataset name, hh, tldr, orca, ufb, capybara, shp')
+parser.add_argument('--dataset', type=str, default="hh", help='dataset name, hh, tldr, orca')
 # training setting
 parser.add_argument('--batch_size', type=int, default=128, help='total batch size')
 parser.add_argument('--gradient_accumulation_steps', type=int, default=8, help='gradient accumulation steps')
 parser.add_argument('--epochs', type=int, default=1, help='total epochs')
 parser.add_argument('--lr', type=float, default=2e-5, help='learning rate')
 parser.add_argument('--max_grad_norm', type=float, default=10, help='max grad norm')
-# parser.add_argument('--max_length', type=int, default=512, help='max length')
 parser.add_argument('--seed', type=int, default=123, help='seed')
 parser.add_argument('--lr_scheduler_type', type=str, default='cosine', help='lr scheduler type')
 parser.add_argument('--warmup_ratio', type=float, default=0.1, help='warmup ratio')
@@ -36,7 +34,6 @@ per_device_train_batch_size = int(args.batch_size / gpu_nums / args.gradient_acc
 model_name, tokenizer_name = return_model_name(args.model)
 
 sft_model = AutoModelForCausalLM.from_pretrained(model_name, trust_remote_code=True, dtype=torch.bfloat16)
-
 tokenizer = AutoTokenizer.from_pretrained(tokenizer_name, trust_remote_code=True)
 
 if tokenizer.pad_token is None:
@@ -53,19 +50,14 @@ def sft_tldr(example):
     return {"text": example["prompt"] + example["chosen"]}
 def sft_orca(example):
     return {"text": example["prompt"] + example["chosen"]}
-# def sft_ufb(example):
-#     return {"messages": example["chosen"]}
 
-if args.dataset == 'hh' or args.dataset == 'ufb':
+if args.dataset == 'hh':
     sft_train_dataset = preference_train_dataset.map(sft_hh).remove_columns(preference_train_dataset.column_names)
     sft_test_dataset = preference_test_dataset.map(sft_hh).remove_columns(preference_test_dataset.column_names)
     sft_train_dataset = sft_train_dataset.map(lambda x: {"text": tokenizer.apply_chat_template(x["messages"], tokenize=False, add_generation_prompt=False, enable_thinking=False)})
 elif args.dataset == 'tldr':
     sft_train_dataset = preference_train_dataset.map(sft_tldr).remove_columns(["prompt", "chosen", "rejected"])
     sft_test_dataset = preference_test_dataset.map(sft_tldr).remove_columns(["prompt", "chosen", "rejected"])
-elif args.dataset == 'orca':
-    sft_train_dataset = preference_train_dataset.map(sft_orca).remove_columns(["prompt", "chosen", "rejected"])
-    sft_train_dataset = preference_test_dataset.map(sft_orca).remove_columns(["prompt", "chosen", "rejected"])
 elif args.dataset == 'capybara':
     sft_train_dataset = preference_train_dataset
     sft_test_dataset = preference_test_dataset

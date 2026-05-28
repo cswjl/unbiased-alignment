@@ -1232,10 +1232,6 @@ class DPOTrainer(BaseTrainer):
             prob = (torch.exp(self.beta * logits) + self.args.unbiased_a) / (torch.exp(self.beta * logits) + 1)
             losses = - torch.log(prob)
             
-        elif loss_type == "unbiased_original":
-            losses = (
-                -F.logsigmoid(torch.log((torch.exp(self.beta * logits) + self.args.unbiased_a)/(1+ self.args.unbiased_a * torch.exp(self.beta * logits))))
-            )
         elif loss_type == "normal_unbiased":
             sqrt_a = self.args.unbiased_a ** 0.5
             normal = (1 + sqrt_a) / (1 - sqrt_a)

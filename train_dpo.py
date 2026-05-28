@@ -15,24 +15,21 @@ import wandb
 parser = argparse.ArgumentParser(description='dpo-base train')
 # model and dataset name
 parser.add_argument('--model', type=str, default="qwen1.7b", help='model name')
-parser.add_argument('--dataset', type=str, default="shp", help='dataset name, hh, tldr, orca, ufb, shp')
+parser.add_argument('--dataset', type=str, default="hh", help='dataset name, hh, tldr, ufb')
 parser.add_argument('--noise_rate', type=float, default=0, help='noise rate')
 # loss setting
 parser.add_argument('--loss', type=str, default='sigmoid', help='the loss functions, sigmoid, robust, unbiased...')
 parser.add_argument('--para', type=float, default=0, help='loss parameter')
-# parser.add_argument('--beta', type=float, default=0.1, help='loss parameter')
 # train setting
 parser.add_argument('--batch_size', type=int, default=128, help='total batch size')
 parser.add_argument('--gradient_accumulation_steps', type=int, default=4, help='gradient accumulation steps')
-parser.add_argument('--precompute_ref_batch_size_multiple', type=int, default=4, help='')
+parser.add_argument('--precompute_ref_batch_size_multiple', type=int, default=4, help='precompute_ref_batch_size_multiple')
 parser.add_argument('--epochs', type=int, default=3, help='epochs')
 parser.add_argument('--lr', type=float, default=5e-6, help='learning rate')
 parser.add_argument('--max_grad_norm', type=float, default=10, help='max grad norm')
-# parser.add_argument('--max_length', type=int, default=1024, help='max length')
 parser.add_argument('--seed', type=int, default=123, help='seed')
 parser.add_argument('--lr_scheduler_type', type=str, default='linear', help='lr scheduler type')
 parser.add_argument('--warmup_ratio', type=float, default=0.1, help='warmup ratio')
-# parser.add_argument('--optim', type=str, default="adamw_bnb_8bit", help='optim')
 parser.add_argument('--debug', default=False, action="store_true")
 args = parser.parse_args()
 

@@ -37,22 +37,13 @@ def get_logger(filename):
 def return_dataset_name(dataset):
     if dataset == 'hh':
         dataset_name = "trl-lib/hh-rlhf-helpful-base"
-    elif dataset == 'descriptiveness':
-        dataset_name = "trl-lib/lm-human-preferences-descriptiveness"
-    elif dataset == 'sentiment':
-        dataset_name = "trl-lib/lm-human-preferences-sentiment"
     elif dataset == 'tldr':
         dataset_name = "trl-lib/tldr-preference"
     elif dataset == 'ufb':
         dataset_name = "trl-lib/ultrafeedback_binarized"
-    elif dataset == 'orca':
-        dataset_name = "Intel/orca_dpo_pairs"
-    elif dataset == 'ultrachet':
-        dataset_name = 'HuggingFaceH4/ultrachat_200k'
     elif dataset == 'capybara':
         dataset_name = "trl-lib/Capybara"
-    elif dataset == 'shp':
-        dataset_name = "stanfordnlp/SHP"
+
     return dataset_name
 
 def return_model_name(model):
@@ -107,21 +98,6 @@ def return_preference_dataset(dataset):
    
 
     return preference_train_dataset, preference_test_dataset
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
